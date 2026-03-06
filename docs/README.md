@@ -9,11 +9,7 @@
 **Location:** SSA 2026 Annual Meeting
 **Max Participants:** 40
 
-**Instructors:**
-[Ettore Biondi](https://stanford.edu/) (Stanford University),
-[Jiaxuan Li](https://www.uh.edu/) (University of Houston),
-[Chun Zhang]() (University of Houston),
-[Weiqiang Zhu](https://ai4eps.github.io/homepage/) (UC Berkeley)
+**Instructors:** [Ettore Biondi](https://stanford.edu/) (Stanford University), [Jiaxuan Li](https://www.uh.edu/) (University of Houston), [Chun Zhang]() (UC Berkeley), [Weiqiang Zhu](https://ai4eps.github.io/homepage/) (UC Berkeley) (alphabetical order)
 
 ---
 
@@ -50,19 +46,6 @@ This one-day workshop is designed for researchers at all levels who are interest
 Participants will then be introduced to data processing workflows for extracting meaningful seismic information from DAS recordings. This includes techniques for high-precision earthquake travel-time picking using machine learning, and methods for estimating focal mechanisms across a wide range of event magnitudes. In the final segment, we will demonstrate how to compute noise cross-correlations from DAS data and how to combine these with earthquake arrivals to perform high-resolution seismic tomography.
 
 By the end of the workshop, participants will gain a comprehensive understanding of the end-to-end DAS workflow — from field setup to advanced data analysis — empowering them to fully utilize the high spatial and temporal resolution provided by DAS arrays in their research.
-
----
-
-## Registration
-
-Price per person includes lunch.
-
-| Category | Fee |
-|----------|-----|
-| Students | $65 |
-| Early-Career Members | $75 |
-| Standard | $100 |
-| Non-member | $115 |
 
 ---
 
