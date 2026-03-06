@@ -1,0 +1,9 @@
+notebooks/local/
+.conda
+site/
+CLAUDE.local.md
+
+*.pdf
+*.mp4
+*.pptx
+*.docx

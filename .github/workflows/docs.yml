@@ -1,0 +1,24 @@
+name: website
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: pip install "mkdocs<2" mkdocs-material mkdocs-jupyter pymdown-extensions
+      - run: |
+          RELEASE_URL=https://github.com/AI4EPS/DAS_Seismology_Workshop/releases/download/Slides
+          mkdir -p docs/phasenet_das && wget -O docs/phasenet_das/phasenet_das.pdf ${RELEASE_URL}/Deep.Learning.DAS.pdf
+          # mkdir -p docs/das_basics && wget -O docs/das_basics/das_basics.pdf ${RELEASE_URL}/das_basics.pdf
+          # mkdir -p docs/focal_mechanisms && wget -O docs/focal_mechanisms/focal_mechanisms.pdf ${RELEASE_URL}/focal_mechanisms.pdf
+          # mkdir -p docs/eikonal_tomography && wget -O docs/eikonal_tomography/eikonal_tomography.pdf ${RELEASE_URL}/eikonal_tomography.pdf
+      - run: mkdocs gh-deploy --force
