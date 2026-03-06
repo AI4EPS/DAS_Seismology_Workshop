@@ -1,0 +1,8 @@
+notebooks/local/
+.conda
+site/
+
+*.pdf
+*.mp4
+*.pptx
+*.docx

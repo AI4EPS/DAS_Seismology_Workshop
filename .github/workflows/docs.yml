@@ -1,0 +1,25 @@
+name: website
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: pip install mkdocs-material mkdocs-jupyter pymdown-extensions
+      - run: |
+          # Download slides from GitHub Releases (uncomment and update URLs when slides are uploaded)
+          # mkdir -p docs/das_basics && wget -O docs/das_basics/das_basics.pdf https://github.com/AI4EPS/DAS_Seismology_Workshop/releases/download/Slides/das_basics.pdf
+          # mkdir -p docs/phasenet_das && wget -O docs/phasenet_das/phasenet_das.pdf https://github.com/AI4EPS/DAS_Seismology_Workshop/releases/download/Slides/phasenet_das.pdf
+          # mkdir -p docs/focal_mechanisms && wget -O docs/focal_mechanisms/focal_mechanisms.pdf https://github.com/AI4EPS/DAS_Seismology_Workshop/releases/download/Slides/focal_mechanisms.pdf
+          # mkdir -p docs/eikonal_tomography && wget -O docs/eikonal_tomography/eikonal_tomography.pdf https://github.com/AI4EPS/DAS_Seismology_Workshop/releases/download/Slides/eikonal_tomography.pdf
+          echo "Slides not yet uploaded to Releases"
+      - run: mkdocs gh-deploy --force

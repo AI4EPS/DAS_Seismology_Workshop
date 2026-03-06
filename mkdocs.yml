@@ -1,0 +1,53 @@
+site_name: "DAS Seismology Workshop"
+site_url: "https://ai4eps.github.io/DAS_Seismology_Workshop"
+site_author: ""
+site_description: ""
+repo_name: "DAS Seismology Workshop"
+repo_url: "https://github.com/AI4EPS/DAS_Seismology_Workshop/"
+
+nav:
+    - Home: 'README.md'
+    - DAS Basics:
+      - Slides: 'das_basics.md'
+      - 'Lab: DAS Basics': 'notebooks/lab1_das_basics.ipynb'
+    - PhaseNet-DAS:
+      - Slides: 'phasenet_das.md'
+      - 'Lab: Phase Picking': 'notebooks/lab2_phasenet_das.ipynb'
+    - Focal Mechanisms:
+      - Slides: 'focal_mechanisms.md'
+      - 'Lab: Focal Mechanisms': 'notebooks/lab3_focal_mechanisms.ipynb'
+    - Eikonal Tomography:
+      - Slides: 'eikonal_tomography.md'
+      - 'Lab: Tomography': 'notebooks/lab4_eikonal_tomography.ipynb'
+
+theme:
+  name: "material"
+  features:
+    - navigation.expand
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - content.code.annotate
+    - content.action.edit
+
+plugins:
+  - search
+  - mkdocs-jupyter:
+      ignore_h1_titles: true
+      allow_errors: true
+
+markdown_extensions:
+  - footnotes
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/katex.js
+  - https://unpkg.com/katex@0/dist/katex.min.js
+  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+
+extra_css:
+  - https://unpkg.com/katex@0/dist/katex.min.css
+
+extra:
+  generator: false
