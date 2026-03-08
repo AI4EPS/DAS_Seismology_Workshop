@@ -19,7 +19,7 @@ nav:
       - 'Lab: Focal Mechanisms': 'notebooks/lab3_focal_mechanisms.ipynb'
     - Eikonal Tomography:
       - Slides: 'eikonal_tomography.md'
-      - 'Lab: Tomography': 'notebooks/lab4_eikonal_tomography/'
+      - 'Lab: Tomography': 'notebooks/lab4_eikonal_tomography/lab4_eikonal_tomography.ipynb'
 
 theme:
   name: "material"
