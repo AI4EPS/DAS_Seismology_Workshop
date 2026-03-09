@@ -10,7 +10,7 @@ nav:
     - Home: 'README.md'
     - DAS Basics:
       - Slides: 'das_basics.md'
-      - 'Lab: DAS Basics': 'notebooks/lab1_das_basics.ipynb'
+      - 'Lab: DAS Basics': 'notebooks/lab1_das_basics/lab1_das_basics.ipynb'
     - PhaseNet-DAS:
       - Slides: 'phasenet_das.md'
       - 'Lab: Phase Picking': 'notebooks/lab2_phasenet_das.ipynb'
