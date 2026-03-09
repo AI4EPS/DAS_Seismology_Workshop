@@ -53,3 +53,6 @@ extra_css:
 
 extra:
   generator: false
+  analytics:
+    provider: google
+    property: G-YB5QD11CE5
