@@ -24,11 +24,11 @@
 | Time | Topic |
 |------|-------|
 | 09:00 – 09:10 | Welcome, logistics, GCP login check |
-| 09:10 – 09:35 | [DAS Basics: Instruments & Measurements](das_basics.md) |
-| 09:35 – 10:20 | [Phase Picking with PhaseNet-DAS](phasenet_das.md) |
+| 09:10 – 09:35 | [DAS Basics: Instruments & Measurements](https://ai4eps.github.io/DAS_Seismology_Workshop/das_basics/) |
+| 09:35 – 10:20 | [Phase Picking with PhaseNet-DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/phasenet_das/) |
 | 10:20 – 10:30 | *Coffee Break* |
-| 10:30 – 11:15 | [Focal Mechanisms & Source Parameters from DAS](focal_mechanisms.md) |
-| 11:15 – 12:00 | [Eikonal Traveltime Tomography with DAS](eikonal_tomography.md) |
+| 10:30 – 11:15 | [Focal Mechanisms & Source Parameters from DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/focal_mechanisms/) |
+| 11:15 – 12:00 | [Eikonal Traveltime Tomography with DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/eikonal_tomography/) |
 | 12:00 – 13:00 | *Lunch* |
 
 ### Afternoon — Hands-on Jupyter Labs (Google Cloud Platform)
@@ -39,7 +39,7 @@
 | 13:30 – 14:15 | [Lab 2: Phase Picking with PhaseNet-DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2_phasenet_das/) |
 | 14:15 – 14:25 | *Break* |
 | 14:25 – 15:10 | [Lab 3: Focal Mechanism Inversion](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab3_focal_mechanisms/Notebooks/lab3_focal_mechanisms/) |
-| 15:10 – 16:00 | Lab 4: Eikonal Traveltime Tomography ([2D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d/), [3D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_3d/)) |
+| 15:10 – 16:00 | [Lab 4: Eikonal Traveltime Tomography](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d/) ([2D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d/), [3D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_3d/)) |
 
 ---
 
