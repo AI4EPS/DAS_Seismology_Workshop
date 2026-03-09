@@ -36,6 +36,7 @@ plugins:
   - mkdocs-jupyter:
       ignore_h1_titles: true
       allow_errors: true
+      include: ["*.ipynb"]
 
 markdown_extensions:
   - footnotes
