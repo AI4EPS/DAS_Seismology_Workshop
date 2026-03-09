@@ -35,7 +35,7 @@
 
 | Time | Lab |
 |------|-----|
-| 13:00 – 13:30 | [Lab 1: DAS Basics](notebooks/lab1_das_basics.ipynb) (reading, filtering, plotting) |
+| 13:00 – 13:30 | [Lab 1: DAS Basics](../notebooks/lab1_das_basics/lab1_das_basics.ipynb) (reading, filtering, plotting) |
 | 13:30 – 14:15 | [Lab 2: Phase Picking with PhaseNet-DAS](notebooks/lab2_phasenet_das.ipynb) |
 | 14:15 – 14:25 | *Break* |
 | 14:25 – 15:10 | [Lab 3: Focal Mechanism Inversion](notebooks/lab3_focal_mechanisms.ipynb) |
