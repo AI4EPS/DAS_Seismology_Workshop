@@ -37,9 +37,9 @@
 |------|-----|
 | 13:00 – 13:30 | [Lab 1: DAS Basics](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab1_das_basics/Notebooks/Basic_DAS_data/) (reading, filtering, plotting) |
 | 13:30 – 14:15 | [Lab 2: Phase Picking with PhaseNet-DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2_phasenet_das/) |
-| 14:15 – 14:25 | *Break* |
-| 14:25 – 15:10 | [Lab 3: Focal Mechanism Inversion](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab3_focal_mechanisms/Notebooks/lab3_focal_mechanisms/) |
-| 15:10 – 16:00 | [Lab 4: Eikonal Traveltime Tomography](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d/) ([2D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d/), [3D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_3d/)) |
+| 14:15 – 15:00 | [Lab 3: Focal Mechanism Inversion](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab3_focal_mechanisms/Notebooks/lab3_focal_mechanisms/) |
+| 15:00 – 15:30 | *Coffee Break* |
+| 15:30 – 16:00 | [Lab 4: Eikonal Traveltime Tomography](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d/) ([2D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d/), [3D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_3d/)) |
 
 ---
 
