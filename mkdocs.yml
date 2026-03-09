@@ -10,16 +10,17 @@ nav:
     - Home: 'README.md'
     - DAS Basics:
       - Slides: 'das_basics.md'
-      - 'Lab: DAS Basics': 'notebooks/lab1_das_basics/lab1_das_basics.ipynb'
+      - 'Lab: DAS Basics': 'notebooks/lab1_das_basics/Notebooks/Basic_DAS_data.ipynb'
     - PhaseNet-DAS:
       - Slides: 'phasenet_das.md'
-      - 'Lab: Phase Picking': 'notebooks/lab2_phasenet_das.ipynb'
+      - 'Lab: Phase Picking': 'notebooks/lab2_phasenet_das/Notebooks/lab2_phasenet_das.ipynb'
     - Focal Mechanisms:
       - Slides: 'focal_mechanisms.md'
-      - 'Lab: Focal Mechanisms': 'notebooks/lab3_focal_mechanisms.ipynb'
+      - 'Lab: Focal Mechanisms': 'notebooks/lab3_focal_mechanisms/Notebooks/lab3_focal_mechanisms.ipynb'
     - Eikonal Tomography:
       - Slides: 'eikonal_tomography.md'
-      - 'Lab: Tomography': 'notebooks/lab4_eikonal_tomography/lab4_eikonal_tomography.ipynb'
+      - 'Lab: 2D Tomography': 'notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d.ipynb'
+      - 'Lab: 3D Tomography': 'notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_3d.ipynb'
 
 theme:
   name: "material"

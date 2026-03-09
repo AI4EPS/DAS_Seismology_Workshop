@@ -2,6 +2,8 @@ notebooks/local/
 .conda
 site/
 CLAUDE.local.md
+.ipynb_checkpoints/
+__pycache__/
 
 *.pdf
 *.mp4
