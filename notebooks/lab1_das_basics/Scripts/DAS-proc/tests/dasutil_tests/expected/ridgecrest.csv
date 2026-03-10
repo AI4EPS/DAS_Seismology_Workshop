@@ -1,0 +1,7 @@
+system file nSamples fs Desample startTime endTime nChannels dCh GaugeLen firstSample
+"Ridgecrest South" /dasutil_tests/data/ridgecrest-out1.h5 500 1000.0 4 2023-10-04T17:53:40.001000+00:00 2023-10-04T17:53:41.997000+00:00 500 10.209524 102.09524 0
+"Ridgecrest South" /dasutil_tests/data/ridgecrest-out2.h5 500 1000.0 4 2023-10-04T17:53:42.001000+00:00 2023-10-04T17:53:43.997000+00:00 500 10.209524 102.09524 0
+"Ridgecrest South" /dasutil_tests/data/ridgecrest-out3.h5 500 1000.0 4 2023-10-04T17:53:44.001000+00:00 2023-10-04T17:53:45.997000+00:00 500 10.209524 102.09524 0
+"Ridgecrest South" /dasutil_tests/data/ridgecrest-out4.h5 500 1000.0 4 2023-10-04T17:53:46.001000+00:00 2023-10-04T17:53:47.997000+00:00 500 10.209524 102.09524 0
+"Ridgecrest South" /dasutil_tests/data/ridgecrest-out5.h5 500 1000.0 4 2023-10-04T17:53:48.001000+00:00 2023-10-04T17:53:49.997000+00:00 500 10.209524 102.09524 0
+"Ridgecrest South" /dasutil_tests/data/ridgecrest-out6.h5 500 1000.0 4 2023-10-04T17:53:50.001000+00:00 2023-10-04T17:53:51.997000+00:00 500 10.209524 102.09524 0
