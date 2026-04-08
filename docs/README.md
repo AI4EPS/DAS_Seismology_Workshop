@@ -51,6 +51,10 @@ Participants will then be introduced to data processing workflows for extracting
 
 By the end of the workshop, participants will gain a comprehensive understanding of the end-to-end DAS workflow — from field setup to advanced data analysis — empowering them to fully utilize the high spatial and temporal resolution provided by DAS arrays in their research.
 
+## Acknowledgments
+
+The workshop is generously supported by Google through the provision of cloud computing resources on Google Cloud Platform, which were instrumental in enabling the execution of the DAS lab sessions. We gratefully acknowledge the Doerr School of Sustainability Computational Support Team at Stanford University for their support, and we specifically thank Brian Tempero, Brian Chivers, and Ellianna Abrahams for their assistance with computational infrastructure and deployment.
+
 ---
 
 If you have any questions about the workshop materials or encounter any issues, please [open an issue](https://github.com/AI4EPS/DAS_Seismology_Workshop/issues) on our GitHub repository.
