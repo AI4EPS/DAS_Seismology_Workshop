@@ -25,7 +25,7 @@
 |------|-------|
 | 09:00 – 09:10 | Welcome, logistics, GCP login check |
 | 09:10 – 09:35 | [DAS Basics: Instruments & Measurements](https://ai4eps.github.io/DAS_Seismology_Workshop/das_basics/) |
-| 09:35 – 10:20 | [Phase Picking with PhaseNet-DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/phasenet_das/) |
+| 09:35 – 10:20 | [Deep Learning for DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/phasenet_das/) |
 | 10:20 – 10:30 | *Coffee Break* |
 | 10:30 – 11:15 | [Focal Mechanisms & Source Parameters from DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/focal_mechanisms/) |
 | 11:15 – 12:00 | [Eikonal Traveltime Tomography with DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/eikonal_tomography/) |
@@ -36,7 +36,7 @@
 | Time | Lab |
 |------|-----|
 | 13:00 – 13:30 | [Lab 1: DAS Basics](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab1_das_basics/Notebooks/Basic_DAS_data/) (reading, filtering, plotting) |
-| 13:30 – 14:15 | Lab 2: Phase Picking with PhaseNet-DAS ([2a: Inference](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2a_phasenet_das_inference/), [2b: Association](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2b_phase_association/), [2c: Training](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2c_semisupervised_training/), [2d: DASNet Inference](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2d_dasnet_inference/)) |
+| 13:30 – 14:15 | Lab 2: Deep Learning for DAS <br> [2a: PhaseNet-DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2a_phasenet_das_inference/), [2b: Association](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2b_phase_association/), [2c: Training](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2c_semisupervised_training/), [2d: DASNet](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2d_dasnet_inference/) |
 | 14:15 – 15:00 | [Lab 3: Focal Mechanism Inversion](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab3_focal_mechanisms/Notebooks/lab3_focal_mechanisms/) |
 | 15:00 – 15:30 | *Coffee Break* |
 | 15:30 – 16:00 | [Lab 4: Eikonal Traveltime Tomography](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d/) ([2D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d/), [3D](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_3d/)) |

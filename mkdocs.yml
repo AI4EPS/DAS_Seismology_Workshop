@@ -11,7 +11,7 @@ nav:
     - DAS Basics:
       - Slides: 'das_basics.md'
       - 'Lab: DAS Basics': 'notebooks/lab1_das_basics/Notebooks/Basic_DAS_data.ipynb'
-    - PhaseNet-DAS:
+    - Deep Learning for DAS:
       - Slides: 'phasenet_das.md'
       - 'Lab 2a: PhaseNet Inference': 'notebooks/lab2_phasenet_das/Notebooks/lab2a_phasenet_das_inference.ipynb'
       - 'Lab 2b: Phase Association': 'notebooks/lab2_phasenet_das/Notebooks/lab2b_phase_association.ipynb'
