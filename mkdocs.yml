@@ -19,7 +19,13 @@ nav:
       - 'Lab 2d: DASNet Inference': 'notebooks/lab2_phasenet_das/Notebooks/lab2d_dasnet_inference.ipynb'
     - Focal Mechanisms:
       - Slides: 'focal_mechanisms.md'
-      - 'Lab: Focal Mechanisms': 'notebooks/lab3_focal_mechanisms/Notebooks/lab3_focal_mechanisms.ipynb'
+      - 'dasfm Package': 'notebooks/lab3_focal_mechanisms/Notebooks/dasfm_package.md'
+      - 'Lab 3: Download Data': 'notebooks/lab3_focal_mechanisms/Notebooks/lab3_download_data.ipynb'
+      - 'Lab 3: Simplest Running': 'notebooks/lab3_focal_mechanisms/Notebooks/lab3_simplest_running.ipynb'
+      - 'Lab 3a: Ray Parameters 2D': 'notebooks/lab3_focal_mechanisms/Notebooks/lab3a_ray_parameters_2d.ipynb'
+      - 'Lab 3b: DAS Preprocessing': 'notebooks/lab3_focal_mechanisms/Notebooks/lab3b_das_preprocessing.ipynb'
+      - 'Lab 3c: Focal Mechanism Inversion': 'notebooks/lab3_focal_mechanisms/Notebooks/lab3c_focal_mechanism_inversion.ipynb'
+      - 'Lab 3d: Result Summary': 'notebooks/lab3_focal_mechanisms/Notebooks/lab3d_result_summary.ipynb'
     - Eikonal Tomography:
       - Slides: 'eikonal_tomography.md'
       - 'Lab: 2D Tomography': 'notebooks/lab4_eikonal_tomography/Notebooks/lab4_eikonal_tomography_2d.ipynb'
