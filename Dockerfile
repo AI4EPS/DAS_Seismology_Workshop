@@ -10,7 +10,7 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # ── System dependencies ───────────────────────────────────────
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y \
   software-properties-common \
   build-essential \
   curl \
@@ -20,27 +20,29 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   vim \
   && rm -rf /var/lib/apt/lists/*
 
-# ── Install micromamba ───────────────────────────────────────── #this updates to micromamba instead of miniconda
-ENV MAMBA_ROOT_PREFIX=/opt/conda
-RUN curl -fsSL https://micro.mamba.pm/api/micromamba/linux-64/latest \
-  | tar -xj -C /usr/local/bin --strip-components=1 bin/micromamba && \
-  micromamba shell init -s bash -p "$MAMBA_ROOT_PREFIX" && \
-  mkdir -p "$MAMBA_ROOT_PREFIX" && \
-  printf 'channels:\n  - conda-forge\nchannel_priority: strict\n' \
-  > "$MAMBA_ROOT_PREFIX/.condarc"
+# ── Install Miniconda ─────────────────────────────────────────
+ENV CONDA_DIR=/opt/conda
+RUN wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+  bash /tmp/miniconda.sh -b -p "$CONDA_DIR" && \
+  rm /tmp/miniconda.sh
+ENV PATH="$CONDA_DIR/bin:$PATH"
 
-# Ensure micromamba is activated in every RUN shell
-SHELL ["/bin/bash", "-l", "-c"]
+# ── Configure conda: accept ToS + use conda-forge only ──────
+# Write .condarc directly — most reliable method across base images.
+# Also accept ToS explicitly so non-interactive builds never block.
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
+  conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r && \
+  printf 'channels:\n  - conda-forge\nchannel_priority: strict\ndefault_channels: []\n' > /opt/conda/.condarc
 
 # ── JupyterHub + JupyterLab in base conda env ────────────────
 # nb_conda_kernels must be installed via conda (not pip) to work correctly.
-RUN micromamba install -n base -y \
+RUN conda install -n base -y \
   jupyterhub \
   jupyterlab \
   jupyter_server \
   ipykernel \
   nb_conda_kernels && \
-  micromamba clean -afy
+  conda clean -afy
 
 # ── Setup user ────────────────────────────────────────────────
 ARG NB_USER=jovyan
@@ -49,7 +51,7 @@ ENV USER=${NB_USER}
 ENV HOME=/home/${NB_USER}
 
 RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
-  chown -R $NB_USER:users $MAMBA_ROOT_PREFIX
+  chown -R $NB_USER:users $CONDA_DIR
 
 # ── Clone workshop repo ───────────────────────────────────────
 # Cloned as root so cmake build can run, then handed to jovyan
@@ -57,22 +59,21 @@ RUN git clone https://github.com/AI4EPS/DAS_Seismology_Workshop.git /opt/worksho
   chown -R $NB_USER:users /opt/workshop-repo
 
 # ── Create das-proc conda environment ────────────────────────
-# Combine env + C++ build + kernel creation into single layer
-ENV CONDA_ENV_PREFIX="$MAMBA_ROOT_PREFIX/envs/das-proc"
-
-RUN micromamba create -n das-proc -y \
-  python=3.9 \
+# Bypass conda env create (no --override-channels support) and build manually.
+# Conda create + install split avoids default_channels being re-injected.
+RUN conda create -n das-proc -c conda-forge --override-channels -y python=3.9 && \
+  conda install -n das-proc -c conda-forge --override-channels -y \
   cmake=4.0.3 \
   gcc=14.2.0 \
   gxx=14.2.0 && \
-  micromamba run -n das-proc pip install --no-cache-dir \
+  conda run -n das-proc pip install --no-cache-dir \
   h5py==3.14.0 \
   joblib==1.5.1 \
   matplotlib \
   numba==0.55.2 \
-  numpy \
+  numpy\
   pandas==2.3.1 \
-  geopandas \
+  geopandas \ 
   pillow==11.1.0 \
   psutil==7.0.0 \
   python-dateutil==2.9.0.post0 \
@@ -83,11 +84,18 @@ RUN micromamba create -n das-proc -y \
   utm \
   pykonal==0.3.2b3 \
   gdown \
-  obspy \
+  obspy \ 
   basemap \
   ipykernel && \
-  ln -s $CONDA_ENV_PREFIX/bin/gdown /usr/local/bin/gdown && \
-  mkdir -p /opt/workshop-repo/notebooks/lab1_das_basics/Scripts/DAS-proc/build && \
+  conda clean -afy
+
+RUN ln -s $CONDA_DIR/envs/das-proc/bin/gdown /usr/local/bin/gdown
+
+# ── Build DAS-proc C++ extension ─────────────────────────────
+# Mirrors the cmake/make steps from the original setup script
+ENV CONDA_ENV_PREFIX="$CONDA_DIR/envs/das-proc"
+
+RUN mkdir -p /opt/workshop-repo/notebooks/lab1_das_basics/Scripts/DAS-proc/build && \
   cd /opt/workshop-repo/notebooks/lab1_das_basics/Scripts/DAS-proc/build && \
   $CONDA_ENV_PREFIX/bin/cmake \
   -DCMAKE_CXX_COMPILER=$CONDA_ENV_PREFIX/bin/g++ \
@@ -100,19 +108,18 @@ RUN micromamba create -n das-proc -y \
   -DCMAKE_EXE_LINKER_FLAGS="-fno-lto" \
   -DCMAKE_SHARED_LINKER_FLAGS="-fno-lto" \
   .. && \
-  make -j$(nproc) && \
-  $CONDA_ENV_PREFIX/bin/python -m ipykernel install \
+  make -j$(nproc)
+
+# ── Register das-proc as a Jupyter kernel ────────────────────
+RUN $CONDA_ENV_PREFIX/bin/python -m ipykernel install \
   --name das-proc \
-  --display-name "DAS Processing (Python 3.9)" && \
-  micromamba clean -afy && \
-  rm -rf /opt/workshop-repo/notebooks/lab1_das_basics/Scripts/DAS-proc/build/CMakeFiles
+  --display-name "DAS Processing (Python 3.9)"
 
 # ── Create Eikonal conda environment ────────────────────────
-RUN micromamba create -n Eikonal -y \
-  python=3.9 \
-  pip \
-  ipykernel && \
-  micromamba run -n Eikonal pip install --no-cache-dir \
+RUN apt-get update && apt-get install -y git
+
+RUN conda create -n Eikonal -c conda-forge --override-channels -y python=3.9 pip ipykernel && \
+  conda run -n Eikonal pip install --no-cache-dir \
   numpy==1.23.0 \
   scipy \
   matplotlib \
@@ -121,23 +128,21 @@ RUN micromamba create -n Eikonal -y \
   psutil \
   joblib==1.5.1 \
   tqdm \
-  utm \
-  numba==0.58.0 \
-  cython==3.0.3 \
-  setuptools \
-  wheel && \
-  micromamba run -n Eikonal pip install --no-cache-dir \
+  utm \ 
+  numba==0.58.0 && \
+  conda run -n Eikonal pip install --no-cache-dir \
+  cython==3.0.3 setuptools wheel && \
+  conda run -n Eikonal pip install --no-cache-dir \
   git+https://github.com/malcolmw/pykonal@0.2.3b3 && \
-  micromamba run -n Eikonal python -m ipykernel install \
-  --prefix=$MAMBA_ROOT_PREFIX \
+  conda run -n Eikonal python -m ipykernel install \
+  --prefix=/opt/conda \
   --name Eikonal \
   --display-name "Python Eikonal" && \
-  micromamba clean -afy
+  conda clean -afy
 
 # ── Create PhaseNet-DAS environment ───────────────────────────
-RUN micromamba create -n phasenet-das -y \
-  python=3.10 && \
-  micromamba run -n phasenet-das pip install --no-cache-dir \
+RUN conda create -n phasenet-das -c conda-forge --override-channels -y python=3.10 && \
+  conda run -n phasenet-das pip install --no-cache-dir \
   torch \
   einops \
   numpy \
@@ -152,17 +157,51 @@ RUN micromamba create -n phasenet-das -y \
   datasets \
   pyarrow \
   wandb \
+  huggingface_hub \
+  torchvision \
+  scikit-learn \
   ipykernel && \
-  $MAMBA_ROOT_PREFIX/envs/phasenet-das/bin/python -m ipykernel install \
+  conda clean -afy
+
+# ── Register PhaseNet-DAS kernel ─────────────────────────────
+RUN /opt/conda/envs/phasenet-das/bin/python -m ipykernel install \
   --name phasenet-das \
-  --display-name "PhaseNet-DAS" && \
-  micromamba clean -afy
+  --display-name "PhaseNet-DAS"
+
+
+# ── Create dasfm environment ──────────────────────────────────
+RUN conda create -n dasfm -c conda-forge --override-channels -y python=3.11 && \
+  conda run -n dasfm pip install --no-cache-dir \
+  torch --index-url https://download.pytorch.org/whl/cu126 && \
+  conda run -n dasfm pip install --no-cache-dir \
+  numpy \
+  scipy \
+  pandas \
+  matplotlib \
+  h5py \
+  numba \
+  rasterio \
+  ipykernel \
+  ipython \
+  ipywidgets \
+  tqdm \
+  psutil \
+  obspy \
+  pykonal \
+  huggingface_hub && \
+  conda run -n dasfm pip install --no-cache-dir -e /opt/workshop-repo/notebooks/lab3_focal_mechanisms/Scripts/dasfm_workshop && \
+  conda run -n dasfm python -m ipykernel install \
+  --prefix=/opt/conda \
+  --name dasfm \
+  --display-name "DASFM" && \
+  conda clean -afy
 
 # ── Fix ownership ─────────────────────────────────────────────
-RUN chown -R $NB_USER:users /opt/workshop-repo \
-  $MAMBA_ROOT_PREFIX/envs/das-proc \
-  $MAMBA_ROOT_PREFIX/envs/Eikonal \
-  $MAMBA_ROOT_PREFIX/envs/phasenet-das
+RUN chown -R $NB_USER:users /opt/workshop-repo && \
+  chown -R $NB_USER:users $CONDA_DIR/envs/das-proc && \
+  chown -R $NB_USER:users $CONDA_DIR/envs/Eikonal && \
+  chown -R $NB_USER:users $CONDA_DIR/envs/phasenet-das && \
+  chown -R $NB_USER:users $CONDA_DIR/envs/dasfm
 
 # ── CUDA environment variables ────────────────────────────────
 ENV PATH=/usr/local/cuda/bin:/usr/local/bin:${PATH}
