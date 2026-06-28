@@ -61,32 +61,33 @@ RUN git clone https://github.com/AI4EPS/DAS_Seismology_Workshop.git /opt/worksho
 # ── Create das-proc conda environment ────────────────────────
 # Bypass conda env create (no --override-channels support) and build manually.
 # Conda create + install split avoids default_channels being re-injected.
-RUN conda create -n das-proc -c conda-forge --override-channels -y python=3.9 && \
-  conda install -n das-proc -c conda-forge --override-channels -y \
+RUN conda create -n das-proc -c conda-forge --override-channels -y \
+  python=3.9 \
+  pip \
+  ipykernel \
   cmake=4.0.3 \
-  gcc=14.2.0 \
-  gxx=14.2.0 && \
-  conda run -n das-proc pip install --no-cache-dir \
-  h5py==3.14.0 \
-  joblib==1.5.1 \
+  gcc_linux-64=14.2.0 \
+  gxx_linux-64=14.2.0 \
+  h5py=3.14.0 \
+  joblib=1.5.1 \
   matplotlib \
-  numba==0.55.2 \
-  numpy\
-  pandas==2.3.1 \
-  geopandas \ 
-  pillow==11.1.0 \
-  psutil==7.0.0 \
-  python-dateutil==2.9.0.post0 \
+  numba \
+  numpy=1.26.4 \
+  pandas=2.3.1 \
+  geopandas \
+  pillow=11.1.0 \
+  psutil=7.0.0 \
+  python-dateutil=2.9.0.post0 \
   scipy \
   cartopy \
-  sympy==1.14.0 \
+  sympy=1.14.0 \
   tqdm \
   utm \
-  pykonal==0.3.2b3 \
   gdown \
-  obspy \ 
-  basemap \
-  ipykernel && \
+  obspy=1.3.0 \
+  basemap && \
+  conda run -n das-proc pip install --no-cache-dir \
+  pykonal==0.3.2b3 && \
   conda clean -afy
 
 RUN ln -s $CONDA_DIR/envs/das-proc/bin/gdown /usr/local/bin/gdown
@@ -98,7 +99,7 @@ ENV CONDA_ENV_PREFIX="$CONDA_DIR/envs/das-proc"
 RUN mkdir -p /opt/workshop-repo/notebooks/lab1_das_basics/Scripts/DAS-proc/build && \
   cd /opt/workshop-repo/notebooks/lab1_das_basics/Scripts/DAS-proc/build && \
   $CONDA_ENV_PREFIX/bin/cmake \
-  -DCMAKE_CXX_COMPILER=$CONDA_ENV_PREFIX/bin/g++ \
+  -DCMAKE_CXX_COMPILER=$CONDA_ENV_PREFIX/bin/x86_64-conda-linux-gnu-g++ \
   -DPython_ROOT_DIR=$CONDA_ENV_PREFIX \
   -DPython_EXECUTABLE=$CONDA_ENV_PREFIX/bin/python \
   -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF \
@@ -114,6 +115,47 @@ RUN mkdir -p /opt/workshop-repo/notebooks/lab1_das_basics/Scripts/DAS-proc/build
 RUN $CONDA_ENV_PREFIX/bin/python -m ipykernel install \
   --name das-proc \
   --display-name "DAS Processing (Python 3.9)"
+
+
+# ---------------------------------------------------------------------------
+# Layer A: dasio environment + PyTorch + dependencies + Jupyter kernel
+# ---------------------------------------------------------------------------
+RUN conda create -n dasio -c conda-forge --override-channels -y \
+  python=3.11 \
+  pip \
+  ipykernel \
+  ipython \
+  ipywidgets \
+  git \
+  cxx-compiler \
+  cmake \
+  make && \
+  conda run -n dasio python -m pip install --no-cache-dir \
+  torch --index-url https://download.pytorch.org/whl/cu126 && \
+  conda run -n dasio python -m pip install --no-cache-dir \
+  numpy \
+  scipy \
+  pandas \
+  pyarrow \
+  matplotlib \
+  h5py \
+  numba \
+  joblib \
+  tqdm \
+  phasenet && \
+  conda run -n dasio python -m ipykernel install \
+  --prefix=/opt/conda \
+  --name dasio \
+  --display-name "dasio" && \
+  conda clean -afy
+
+# ---------------------------------------------------------------------------
+# Layer B: clone pinned dasio tag and editable-install it
+# ---------------------------------------------------------------------------
+RUN conda run -n dasio git clone --branch v0.1.0 --depth 1 \
+  https://github.com/jxli2a/dasio.git /opt/dasio && \
+  conda run -n dasio python -m pip install --no-cache-dir -e \
+  '/opt/dasio[noise,pick]'
 
 # ── Create Eikonal conda environment ────────────────────────
 RUN apt-get update && apt-get install -y git
@@ -141,7 +183,10 @@ RUN conda create -n Eikonal -c conda-forge --override-channels -y python=3.9 pip
   conda clean -afy
 
 # ── Create PhaseNet-DAS environment ───────────────────────────
-RUN conda create -n phasenet-das -c conda-forge --override-channels -y python=3.10 && \
+RUN conda create -n phasenet-das -c conda-forge --override-channels -y \
+  python=3.10 \
+  pip \
+  ipykernel && \
   conda run -n phasenet-das pip install --no-cache-dir \
   torch \
   einops \
@@ -159,21 +204,24 @@ RUN conda create -n phasenet-das -c conda-forge --override-channels -y python=3.
   wandb \
   huggingface_hub \
   torchvision \
-  scikit-learn \
-  ipykernel && \
-  conda clean -afy
-
-# ── Register PhaseNet-DAS kernel ─────────────────────────────
-RUN /opt/conda/envs/phasenet-das/bin/python -m ipykernel install \
+  scikit-learn && \
+  conda run -n phasenet-das python -m ipykernel install \
+  --prefix=/opt/conda \
   --name phasenet-das \
-  --display-name "PhaseNet-DAS"
+  --display-name "PhaseNet-DAS" && \
+  conda clean -afy
 
 
 # ── Create dasfm environment ──────────────────────────────────
-RUN conda create -n dasfm -c conda-forge --override-channels -y python=3.11 && \
-  conda run -n dasfm pip install --no-cache-dir \
+RUN conda create -n dasfm -c conda-forge --override-channels -y \
+  python=3.11 \
+  pip \
+  ipykernel \
+  ipython \
+  ipywidgets && \
+  conda run -n dasfm python -m pip install --no-cache-dir \
   torch --index-url https://download.pytorch.org/whl/cu126 && \
-  conda run -n dasfm pip install --no-cache-dir \
+  conda run -n dasfm python -m pip install --no-cache-dir \
   numpy \
   scipy \
   pandas \
@@ -181,15 +229,13 @@ RUN conda create -n dasfm -c conda-forge --override-channels -y python=3.11 && \
   h5py \
   numba \
   rasterio \
-  ipykernel \
-  ipython \
-  ipywidgets \
   tqdm \
   psutil \
   obspy \
   pykonal \
   huggingface_hub && \
-  conda run -n dasfm pip install --no-cache-dir -e /opt/workshop-repo/notebooks/lab3_focal_mechanisms/Scripts/dasfm_workshop && \
+  conda run -n dasfm python -m pip install --no-cache-dir -e \
+  /opt/workshop-repo/notebooks/lab3_focal_mechanisms/Scripts/dasfm_workshop && \
   conda run -n dasfm python -m ipykernel install \
   --prefix=/opt/conda \
   --name dasfm \
