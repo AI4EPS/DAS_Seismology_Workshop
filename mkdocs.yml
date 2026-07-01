@@ -10,7 +10,7 @@ nav:
     - Home: 'README.md'
     - DAS Basics:
       - Slides: 'das_basics.md'
-      - 'Lab: DAS Basics': 'notebooks/lab1_das_basics/Notebooks/Basic_DAS_data.ipynb'
+      - 'Lab: DAS Basics': 'notebooks/lab1_das_basics/Notebooks/Basic_DAS_data_dasio.ipynb'
     - Deep Learning for DAS:
       - Slides: 'phasenet_das.md'
       - 'Lab 2a: PhaseNet Inference': 'notebooks/lab2_phasenet_das/Notebooks/lab2a_phasenet_das_inference.ipynb'
