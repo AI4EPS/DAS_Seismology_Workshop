@@ -35,7 +35,7 @@
 
 | Time | Lab |
 |------|-----|
-| 13:00 – 13:30 | [Lab 1: DAS Basics](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab1_das_basics/Notebooks/Basic_DAS_data/) (reading, filtering, plotting) |
+| 13:00 – 13:30 | [Lab 1: DAS Basics](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab1_das_basics/Notebooks/Basic_DAS_data_dasio/) (reading, filtering, plotting) |
 | 13:30 – 14:15 | Lab 2: Deep Learning for DAS <br> [2a: PhaseNet-DAS](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2a_phasenet_das_inference/), [2b: Association](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2b_phase_association/), [2c: Training](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2c_semisupervised_training/), [2d: DASNet](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab2_phasenet_das/Notebooks/lab2d_dasnet_inference/) |
 | 14:15 – 15:00 | Lab 3: Focal Mechanism Inversion <br> [3a: Ray Parameters](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab3_focal_mechanisms/Notebooks/lab3a_ray_parameters_2d/), [3b: DAS Preprocessing](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab3_focal_mechanisms/Notebooks/lab3b_das_preprocessing/), [3c: Inversion](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab3_focal_mechanisms/Notebooks/lab3c_focal_mechanism_inversion/), [3d: Results](https://ai4eps.github.io/DAS_Seismology_Workshop/notebooks/lab3_focal_mechanisms/Notebooks/lab3d_result_summary/) |
 | 15:00 – 15:30 | *Coffee Break* |
