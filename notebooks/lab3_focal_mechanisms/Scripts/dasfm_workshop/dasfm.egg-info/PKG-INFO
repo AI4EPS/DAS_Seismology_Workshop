@@ -1,0 +1,322 @@
+Metadata-Version: 2.4
+Name: dasfm
+Version: 0.1.0
+Summary: Focal mechanism inversion from Distributed Acoustic Sensing (DAS) data
+License: MIT
+Keywords: DAS,focal mechanism,seismology,inversion,geophysics
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=1.24
+Requires-Dist: scipy>=1.10
+Requires-Dist: h5py>=3.8
+Requires-Dist: matplotlib>=3.7
+Requires-Dist: pandas>=1.5
+Requires-Dist: tqdm>=4.64
+Requires-Dist: psutil>=5.9
+Requires-Dist: obspy>=1.4
+Requires-Dist: rasterio>=1.3
+Requires-Dist: numba>=0.57
+Requires-Dist: ipykernel>=6.0
+Requires-Dist: ipywidgets>=8.0
+Requires-Dist: huggingface_hub>=0.20
+Provides-Extra: 3d
+Requires-Dist: pykonal>=0.3; extra == "3d"
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0; extra == "dev"
+Requires-Dist: sphinx>=7.0; extra == "dev"
+Requires-Dist: numpydoc>=1.6; extra == "dev"
+Requires-Dist: sphinx-rtd-theme>=1.3; extra == "dev"
+Dynamic: license-file
+
+# dasfm
+
+**Focal mechanism inversion from DAS strain-rate data and seismic stations.**
+
+`dasfm` jointly inverts P-wave polarity and S/P amplitude ratios from Distributed Acoustic Sensing (DAS) arrays and conventional seismic stations to determine earthquake focal mechanisms. It supports 1-D/2-D/3-D forward modeling, GPU-accelerated MCCC polarity picking, and 7 inversion modes that flexibly combine DAS and station observations.
+
+## Features
+
+- **Joint DAS + station inversion** -- 7 modes combining polarity and S/P amplitude ratios
+- **Three forward methods** -- 1-D ray tracing, 2-D Fast Sweeping with topography, 3-D Eikonal with tomographic velocity
+- **MCCC polarity picking** -- Multi-channel cross-correlation with SVD sign recovery; optional 2-D Hilbert wave separation
+- **Scalable** -- GPU acceleration (PyTorch), multi-CPU/multi-GPU parallelism, sparse pair selection for large catalogs
+- **Quality assessment** -- Hierarchical clustering, Kagan angle uncertainty, STDR, A/B/C/D grading, SKHASH-format export
+
+## Installation
+
+**Requirements:** Python >= 3.11. GPU is optional but recommended. PyTorch must be installed separately.
+
+### Step 0: Check your GPU driver
+
+```bash
+nvidia-smi
+```
+
+Look at `CUDA Version` in the top-right corner, then pick the matching PyTorch build:
+
+| CUDA Version | Recommended |
+|:------------:|:------------|
+| >= 13.0 | `cu130` |
+| >= 12.8 | `cu128` |
+| >= 12.6 | `cu126` |
+| < 12.6 | upgrade driver or use CPU |
+| No GPU | `cpu` |
+
+> Source: [NVIDIA CUDA Toolkit Release Notes](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html), [PyTorch Get Started](https://pytorch.org/get-started/locally/).
+
+### Option 1: pip (recommended)
+
+```bash
+conda create -n dasfm python=3.11
+conda activate dasfm
+```
+
+Install PyTorch (choose ONE):
+
+```bash
+# GPU (CUDA 12.6 — most compatible)
+pip install torch --index-url https://download.pytorch.org/whl/cu126
+
+# CPU only
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+```
+
+Install dasfm:
+
+```bash
+pip install -e .          # core
+pip install -e ".[3d]"   # + 3-D Eikonal support (pykonal)
+```
+
+### Option 2: conda + pip
+
+`environment.yml` installs all dependencies **except** PyTorch (you choose GPU/CPU).
+
+```bash
+conda env create -f environment.yml
+conda activate dasfm
+pip install torch --index-url https://download.pytorch.org/whl/cu126
+pip install -e .
+```
+
+### Notes
+
+- Do **NOT** run bare `pip install torch` — it may pull an incompatible CUDA version.
+- Verify GPU after installation:
+
+```bash
+python -c "import torch; print(torch.cuda.is_available())"
+```
+
+## Quick Start
+
+```python
+from dasfm.steps import (
+    step1_sta_2d, step1_das_2d,
+    step2a_window, step2b_polarity, step2c_spratio,
+    step3_invert, step3_plot, step4_summarize,
+)
+
+PROJECT = "proj_LongValley"
+
+# Step 1: Ray parameters
+step1_sta_2d(project_dir=PROJECT, event_catalog="input/catalog.csv",
+             sta_geo="input/all_stations.csv", vel_1d="input/1D_velocity.txt",
+             topo="input/topo.tif", grid_spacing_km=0.2)
+step1_das_2d(project_dir=PROJECT, event_catalog="input/catalog.csv",
+             das_geo="input/das_info.csv", vel_1d="input/1D_velocity.txt",
+             topo="input/topo.tif", grid_spacing_km=0.2)
+
+# Step 2: DAS waveform processing
+step2a_window(project_dir=PROJECT, event_catalog="input/catalog.csv",
+              das_raw="input/das_raw/H5", das_phase_picks="input/das_raw/phase_picks",
+              das_geo="input/das_info.csv",
+              das_win="middle/das_win", das_fft="middle/das_fft",
+              hilbert=True, device="cuda:0")
+step2b_polarity(project_dir=PROJECT, event_catalog="input/catalog.csv",
+                das_fft="middle/das_fft", das_geo="input/das_info.csv",
+                sta_polarity="input/polarity.csv", sta_geo="input/all_stations.csv",
+                polarity_method="hilbert", device="cuda:0")
+step2c_spratio(project_dir=PROJECT, event_catalog="input/catalog.csv",
+               das_win="middle/das_win")
+
+# Step 3: Inversion
+step3_invert(project_dir=PROJECT, event_catalog="input/catalog.csv",
+             forward_method="2d",
+             inversion_types=["sta_pol + das_pol + das_sp"],
+             das_polarity="middle/mccc_pol/polarity.h5",
+             das_sp_ratio="middle/sp_ratios/sp_ratios.h5",
+             sta_polarity="input/polarity.csv", sta_geo="input/all_stations.csv",
+             das_geo="input/das_info.csv", device="cuda:0")
+
+# Step 4: Results
+step3_plot(project_dir=PROJECT, event_catalog="input/catalog.csv",
+           forward_method="2d")
+step4_summarize(project_dir=PROJECT, event_catalog="input/catalog.csv",
+                forward_method="2d")
+```
+
+See also: `workshop/` for Jupyter notebook tutorials, `dasfm_running_LongValley.py` for a complete script.
+
+## Pipeline
+
+```
+Step 1   Ray parameters (traveltime, takeoff, azimuth, distance)
+         ├── STA: step1_sta_{1d,2d,3d}
+         └── DAS: step1_das_{1d,2d,3d}
+
+Step 2   DAS waveform processing
+         ├── 2a: Windowing + Hilbert P/S separation
+         ├── 2b: Polarity picking (MCCC + SVD)
+         └── 2c: S/P amplitude ratio extraction
+
+Step 3   Focal mechanism grid search + clustering
+Step 3p  Beachball plots
+
+Step 4   Quality grading, SKHASH export, run/mode comparison
+```
+
+## Forward Methods
+
+| Method | Topography | Lateral velocity | Speed |
+|--------|:----------:|:----------------:|:-----:|
+| **1-D** ray tracing (SKHASH) | -- | -- | Fast |
+| **2-D** Fast Sweeping (FSM) | Yes | -- | Medium |
+| **3-D** Eikonal (pykonal) | Yes | Yes | Slow |
+
+2-D/3-D require a topography DEM ([OpenTopography](https://opentopography.org/)). 3-D additionally requires a tomographic velocity model (`.npz`).
+
+## Inversion Modes
+
+```
+"sta_pol"                      # Station polarity
+"sta_pol + sta_sp"             # Station polarity + station S/P
+"das_pol"                      # DAS polarity
+"das_pol + das_sp"             # DAS polarity + DAS S/P
+"sta_pol + das_pol"            # Joint polarity
+"sta_pol + das_sp"             # Station polarity + DAS S/P
+"sta_pol + das_pol + das_sp"   # Full joint
+```
+
+## Parallelism
+
+| Step | CPU | Multi-CPU | GPU | Multi-GPU |
+|------|:---:|:---------:|:---:|:---------:|
+| 1 (ray params) | Serial | Pool | -- | -- |
+| 2a (Hilbert) | Serial | Pool | Single | ThreadPool |
+| 2b (MCCC) | Serial | Block Pool | Single | Block ThreadPool |
+| 3 (inversion) | Serial | Pool | Single | ThreadPool |
+
+```python
+device = "cuda:0"               # single GPU
+device = ["cuda:0", "cuda:1"]   # multi-GPU
+device = "cpu"                  # CPU only
+num_cpu_workers = 8             # multi-CPU parallelism
+```
+
+## Input Data
+
+All inputs under `PROJECT_DIR/input/`. See [Data_format.md](Data_format.md) for specifications.
+
+| File | Description |
+|------|-------------|
+| `catalog.csv` | Event catalog (`event_id`, `latitude`, `longitude`, `depth`, `magnitude`) |
+| `das_info.csv` | DAS channel geometry (`index`, `latitude`, `longitude`) |
+| `all_stations.csv` | Station geometry (`station`, `latitude`, `longitude`) |
+| `1D_velocity.txt` | 1-D velocity model (depth, Vp) |
+| `topo.tif` / `topo.h5` | Topography DEM (2-D/3-D only) |
+| `polarity.csv` | Station polarities (SKHASH, QuakeML, or NCSN format) |
+| `SP_ratio_allstations.csv` | Station S/P amplitude ratios |
+| `das_raw/H5/` | Raw DAS HDF5 (one per event) |
+| `das_raw/phase_picks/` | Phase pick CSV (one per event) |
+
+## Output
+
+| Directory | Contents |
+|-----------|----------|
+| `result_*/inv_sol/{event_id}/` | Per-event focal mechanism solutions (HDF5) |
+| `result_*/event_figs/` | Beachball plots |
+| `result_*/summary_figs/` | Quality summary figures |
+| `result_*/skhash_format/` | SKHASH-compatible CSV exports |
+| `middle/` | Intermediate files (ray params, windows, polarity, S/P ratios) |
+
+## Quality Grades
+
+Solutions are graded A/B/C/D based on (worst metric determines the grade):
+
+| Metric | A | B | C | D | Applies to |
+|--------|---|---|---|---|------------|
+| Polarity misfit | <= 0.15 | <= 0.20 | <= 0.30 | > 0.30 | all modes |
+| Kagan angle uncertainty | <= 25 | <= 35 | <= 45 | > 45 | all modes |
+| STDR | >= 0.5 | >= 0.4 | >= 0.3 | < 0.3 | all modes |
+| Solution probability | >= 0.8 | >= 0.6 | >= 0.5 | < 0.5 | all modes |
+| S/P misfit rate | <= 0.01 | <= 0.02 | <= 0.05 | > 0.05 | joint modes only |
+
+> **Note on DAS STDR:** DAS arrays have thousands of densely spaced channels that cover a large portion of the focal sphere, so DAS-based STDR is typically high (median ~0.65, mostly grade A). STDR is therefore less discriminating for DAS-only modes than for station-only modes where sparse station coverage can genuinely limit focal mechanism constraints.
+
+Customize via `quality_grades.txt` in the project directory.
+
+## Key Parameters
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `forward_method` | -- | `"1d"` / `"2d"` / `"3d"` |
+| `polarity_method` | `"hilbert"` | `"direct"` or `"hilbert"` (Hilbert separation) |
+| `sparse` | `False` | Sparse MCCC for large catalogs (>200 events) |
+| `init_pol_error` | 0.05 | Polarity buffer: threshold = min_misfit + pol_weighted × init_pol_error |
+| `init_amp_error_perc` | 0.005 | Initial S/P percentile threshold |
+| `joint_pol_size` | 60 | Min polarity pool size before applying S/P filter (joint modes) |
+| `sp_norm` | `"L1"` | `"L1"` / `"L2"` / `"cauchy"` |
+| `das_pol_weight` | 0.5 | DAS vs STA weight in joint modes |
+| `vs_vp_ratio` | 1.7 | Vs/Vp for S/P modeling |
+| `sp_decay_k` | `None` | Distance decay for DAS S/P (per km) |
+| `sp_decay_c` | `None` | Constant offset for DAS S/P; disables mean alignment |
+
+## Hardware
+
+Typical dataset (145 events, 4670 DAS channels):
+
+| Step | RAM | VRAM |
+|------|-----|------|
+| Step 1 (2D, 8 workers) | ~500 MB | -- |
+| Step 2a (Hilbert) | ~2 GB | ~4 GB |
+| Step 2b (MCCC) | ~1.4 GB | ~200 MB |
+| Step 3 (inversion) | ~100 MB | ~300 MB |
+
+**Minimum:** 16 GB RAM. **Recommended:** + 8 GB VRAM GPU.
+
+## Package Structure
+
+```
+dasfm/
+  forward/       Traveltime solvers, geometry, channel selection
+  inversion/     Grid search, radiation patterns, clustering, moment tensor
+  picking/       MCCC, SVD polarity, sign calibration, S/P amplitude
+  processing/    Bandpass filter, Hilbert separation, windowing
+  steps/         Pipeline entry points (step1-step4)
+  io/            HDF5/CSV/GeoTIFF readers and writers
+  utils/         Logging, visualization, memory estimation, quality grading
+```
+
+## License
+
+MIT
+
+## References
+
+- Hardebeck, J. L., & Shearer, P. M. (2002). A new method for determining first-motion focal mechanisms. *BSSA*, 92(6), 2264-2276.
+- Li, J., Zhu, W., Biondi, E., & Zhan, Z. (2023). Earthquake focal mechanisms with distributed acoustic sensing. *Nature Communications*, 14, 4181.
+- Luo, B., Jin, G., & Stanek, F. (2021). Near-field strain in distributed acoustic sensing-based microseismic observation. *Geophysics*, 86(5), P49-P60.
+- Skoumal, R. J., et al. (2024). SKHASH: A Python package for computing earthquake focal mechanisms. *SRL*, 95(4), 2519-2526.
+- VanDecar, J. C., & Crosson, R. S. (1990). Determination of teleseismic relative phase arrival times using multi-channel cross-correlation and least squares. *BSSA*, 80(1), 150-169.
+- White, M. C. A., et al. (2020). PyKonal: A Python package for solving the Eikonal equation. *SRL*, 91(4), 2378-2389.

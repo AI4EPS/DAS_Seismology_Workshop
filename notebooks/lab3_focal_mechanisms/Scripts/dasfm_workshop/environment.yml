@@ -1,0 +1,30 @@
+name: dasfm
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  # Core scientific
+  - numpy>=1.24
+  - scipy>=1.10
+  - pandas>=1.5
+  - matplotlib>=3.7
+  - h5py>=3.8
+  # Acceleration
+  - numba>=0.57
+  # Geospatial
+  - rasterio>=1.3
+  # Jupyter / notebook
+  - ipykernel>=6.0
+  - ipython
+  - ipywidgets>=8.0
+  - tqdm>=4.64
+  # Utilities
+  - psutil>=5.9
+  - pip
+  - pip:
+    - obspy>=1.4
+    - pykonal>=0.3
+    # torch is NOT listed here — install manually before `pip install -e .`
+    # so you can choose GPU (cu126) vs CPU:
+    #   pip install torch --index-url https://download.pytorch.org/whl/cu126
